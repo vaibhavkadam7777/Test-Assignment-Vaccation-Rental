@@ -1,0 +1,27 @@
+
+Hey,
+
+  After reading the problem statement I wanted the new feature related to COVID to be plug and play thing.
+  So I have created IRentalHelperService Interface and following class implements it.
+
+   1] BasicRentalHelperService:
+                          Contains logic without COVID features , basically Assigement with refatoring 
+						  
+   2] COVIDFunctionalityRentalHelperService:
+                          Contains the new feature implemention and will work with previous scenarios too.
+          
+		I have registered this service in Startup.cs
+        In future we want to remove new feature then we can register BasicRentalHelperService instead of this one
+
+   ## The tasks completed
+
+   1]    
+        a] preparation time   =>  done
+		b] calender           =>  done
+		
+   2]    Improved readability, maintainability.     
+         Unit Test :  added working test cases in VacationRental.Api.Tests\COVIDTests
+		 
+   3]	 PUT call for Rental  => done 
+
+       Please let me know if any queries.   
