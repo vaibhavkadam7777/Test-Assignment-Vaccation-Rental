@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Controllers
@@ -11,9 +11,13 @@ namespace VacationRental.Api.Controllers
     {
         private readonly IDictionary<int, RentalViewModel> _rentals;
 
-        public RentalsController(IDictionary<int, RentalViewModel> rentals)
+        private readonly RentalHelperService.IRentalHelperService _bookingHelper;
+
+        public RentalsController(IDictionary<int, RentalViewModel> rentals,
+            RentalHelperService.IRentalHelperService bookingHelper)
         {
             _rentals = rentals;
+            _bookingHelper = bookingHelper;
         }
 
         [HttpGet]
@@ -34,10 +38,24 @@ namespace VacationRental.Api.Controllers
             _rentals.Add(key.Id, new RentalViewModel
             {
                 Id = key.Id,
-                Units = model.Units
+                Units = model.Units,
+                PreparationTimeInDays = model.PreparationTimeInDays
             });
 
             return key;
+        }
+
+        [HttpPut("{rentalId}")]
+        public RentalViewModel Put(int rentalId, RentalBindingModel model)
+        {
+            if (!_rentals.ContainsKey(rentalId))
+                throw new ApplicationException("Rental not found");
+
+            var existingRental = _rentals[rentalId];
+
+            var updatedRental = _bookingHelper.UpdateExistingRental(existingRental, model);
+
+            return updatedRental ?? throw new ApplicationException($"Existing Rental with Id : {rentalId} can not updated"); ;
         }
     }
 }
